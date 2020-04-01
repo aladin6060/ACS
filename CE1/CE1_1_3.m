@@ -18,7 +18,7 @@ title("")
 figure
 bodemag(g_norm*(1+info1.W1),"r",g_norm*(1+info2.W1),"g",B,"--b",{0.1,100})
 legend("$\widetilde{G}$, first order $W2$","$\widetilde{G}$, third order $W2$","samples",'Interpreter','latex')
-title("")
+title(" ")
 
 
 
