@@ -37,5 +37,5 @@ Gn = (G1f+G2f+G3f)/3; % gits sicher no bessere methode
 
 %What is the best coice for the nomianl model???? Tscheggi nid
 
-%test
+%test2
 
