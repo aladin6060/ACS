@@ -79,9 +79,12 @@ title('Sensitivity function S')
 % of the closed-loop system with the reduced order controller.
 
 figure(2)
-pzmap(K) %we see that we approximatly 8 of the 11 poles alomst cancel out
+subplot(1,2,1)
+pzmap(K)
+subplot(1,2,2)
+hsvd(K) %calculating the Hankel singular values 
 
-Kred = reduce(K,3); %therefore we reduce the controller to order 3 
+Kred = reduce(K,1); %reducing the controller to first order
 
 Tred = feedback(Kred*G,1);
 Ured = feedback(Kred,G);
@@ -103,6 +106,7 @@ title('Input sensitivity U')
 subplot(2,2,4)
 bodemag(Sred,1/W1d)
 title('Sensitivity function S')
+
 
 
 
