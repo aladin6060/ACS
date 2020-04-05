@@ -165,3 +165,4 @@ bodemag(1-G_tilda/G_nom,'--b')
 set(gca,'YLim',[-35 0])
 title('Plot of the best W2-filter and 1-G_{tilda}/G_{nom}')
 
+
