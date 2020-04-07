@@ -157,6 +157,7 @@ Gs=[G1,G2,G3,G1f,G2f,G3f];
 
 G_nom=Gs(minNcombModel);
 bestW2=W2(minNcombModel,minNcombOrder);
+save('W2.mat','bestW2')
 
 figure;
 bodemag(bestW2,'r')
@@ -164,5 +165,6 @@ hold on
 bodemag(1-G_tilda/G_nom,'--b')
 set(gca,'YLim',[-35 0])
 title('Plot of the best W2-filter and 1-G_{tilda}/G_{nom}')
+
 
 

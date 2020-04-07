@@ -9,6 +9,7 @@ s = tf('s')
 
 
 W1 = (s+15)*0.5/ (s+0.00001)
+bodemag(W1)
 
 % 2. Use the best nominal model and its multiplicative uncertainty filter W2(z) to design an
 % H? controller for robust performance using the mixed sensitivity approach (use mixsyn).
@@ -38,13 +39,15 @@ Gn = G1;
 G = stack(1,G1,G2,G3,G1f,G2f,G3f);
 [Gu, Info] = ucover(G,Gn,4);
 
-W2 = Info.W1;
+W2Ex1 = load('W2.mat'); % load W2 from exercise 1
+W2Ex1=W2Ex1.bestW2;
+W2 = W2Ex1;
 
 W3 = 1/5; % ensuring that control signal doesnt saturate
 
 W1d = c2d(W1,W2.Ts); %transform W1 to a descrete time model
 
-K = mixsyn(Gn,W1d,W3,W2);
+K = mixsyn(Gn,W1d,W3,W2); 
 
 % 3. Plot the step response of the closed-loop system (output and control signal), the magnitude
 % of the input sensitivity function U(z) and the sensitivity function S(z).
@@ -78,11 +81,11 @@ title('Sensitivity function S')
 % controller can be reduced using the reduce command. Check the stability and performance
 % of the closed-loop system with the reduced order controller.
 
-figure(2)
-subplot(1,2,1)
-pzmap(K)
-subplot(1,2,2)
-hsvd(K) %calculating the Hankel singular values 
+%figure(2)
+%subplot(1,2,1)
+%pzmap(K)
+%subplot(1,2,2)
+%hsvd(K) %calculating the Hankel singular values 
 
 Kred = reduce(K,1); %reducing the controller to first order
 
