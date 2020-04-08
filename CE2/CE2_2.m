@@ -32,17 +32,17 @@ Z = iddata(y,u,Ts);
 Zd = detrend(Z);
 G3 = oe(Zd,[6 6 1]);
 G3f = spa(Zd,100);
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 Gn = G1;
 G = stack(1,G1,G2,G3,G1f,G2f,G3f);
 [Gu, Info] = ucover(G,Gn,4);
 
 W2 = Info.W1;
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 W3 = 1/5; % ensuring that control signal doesnt saturate
 
-W1d = c2d(W1,W2.Ts); %transform W1 to a descrete time model
+W1d = W1; %transform W1 to a descrete time model
 
 K = mixsyn(Gn,W1d,W3,W2);
 
