@@ -49,16 +49,10 @@ axis([10^-2 10^3 -60 10])
 title('Bode diagram of the parametric ID (OE)')
 
 %Create a model array based on all identified models
-G_tilda=stack(1,G1,G2,G3,G1f,G2f,G3f);
-MaxModelOrder=20; %fix the model order
+G_tilde=stack(1,G1,G2,G3,G1f,G2f,G3f);
+MaxModelOrder=15; %fix the model order
 
 
-W2_G1=[];
-W2_G2=[];
-W2_G3=[];
-W2_G1f=[];
-W2_G2f=[];
-W2_G3f=[];
 W2_2norms=[];
 W2_infnorms=[];
 calctime=[];
@@ -67,33 +61,27 @@ for o=1:MaxModelOrder
     
     tic
 
-    [sys,info]=ucover(G_tilda,G1,o);
-    W2_G1=[W2_G1,info.W1];
+    [sys,info]=ucover(G_tilde,G1,o);
     W2_2norms(1,o)=norm(info.W1);
     W2_infnorms(1,o)=norm(info.W1,Inf);
     
-    [sys,info]=ucover(G_tilda,G2,o);
-    W2_G2=[W2_G2,info.W1];
+    [sys,info]=ucover(G_tilde,G2,o);
     W2_2norms(2,o)=norm(info.W1);
     W2_infnorms(2,o)=norm(info.W1,Inf);
     
-    [sys,info]=ucover(G_tilda,G3,o);
-    W2_G3=[W2_G3,info.W1];
+    [sys,info]=ucover(G_tilde,G3,o);
     W2_2norms(3,o)=norm(info.W1);
     W2_infnorms(3,o)=norm(info.W1,Inf);
     
-    [sys,info]=ucover(G_tilda,G1f,o);
-    W2_G1f=[W2_G1f,info.W1];
+    [sys,info]=ucover(G_tilde,G1f,o);
     W2_2norms(4,o)=norm(info.W1);
     W2_infnorms(4,o)=norm(info.W1,Inf);
     
-    [sys,info]=ucover(G_tilda,G2f,o);
-    W2_G2f=[W2_G2f,info.W1];
+    [sys,info]=ucover(G_tilde,G2f,o);
     W2_2norms(5,o)=norm(info.W1);
     W2_infnorms(5,o)=norm(info.W1,Inf);
     
-    [sys,info]=ucover(G_tilda,G3f,o);
-    W2_G3f=[W2_G3f,info.W1];
+    [sys,info]=ucover(G_tilde,G3f,o);
     W2_2norms(6,o)=norm(info.W1);
     W2_infnorms(6,o)=norm(info.W1,Inf);
     
@@ -146,23 +134,27 @@ W2_combplot=W2_combined;
 W2_combplot(W2_combplot>2)=[2];
 surf(W2_combplot);
 %hold on
-title('2-Norm of W2-Filters')
+title('Combined Score')
 xlabel('Order')
 ylabel('Model')
 zlabel('Comb-Norm')
 
 %% Plot W2 with 1-Gtilda/Gnom to verify correctness
-W2=[W2_G1;W2_G2;W2_G3;W2_G1f;W2_G2f;W2_G3f];
-Gs=[G1,G2,G3,G1f,G2f,G3f];
+W2=["G1","G2","G3","G1f","G2f","G3f"];
+Gs = ["G1","G2","G3","G1f","G2f","G3f"];
 
-G_nom=Gs(minNcombModel);
-bestW2=W2(minNcombModel,minNcombOrder);
+
+G_nom=eval(Gs(minNcombModel)); %ugly but works, because if stored in matrices the idpoly data gets converted to a channel of idfrd data
+[sys,Info] = ucover(G_tilde,eval(W2(minNcombModel)),minNcombOrder);
+W2 = Info.W1;
 
 figure;
 bodemag(bestW2,'r')
 hold on
-bodemag(1-G_tilda/G_nom,'--b')
+bodemag(1-G_tilde/G_nom,'--b')
 set(gca,'YLim',[-35 0])
 title('Plot of the best W2-filter and 1-G_{tilda}/G_{nom}')
+
+save('CE2_1','G_nom','W2','G1','G2','G3')
 
 

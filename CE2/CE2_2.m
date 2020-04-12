@@ -1,63 +1,25 @@
-clc; clear all; close all;
-
+clc; clear variables; close all;
 s = tf('s')
 
-% 1. Design the weighting filter W1(z) for
-% — A desired closed-loop bandwidth of around 15 rad/s. -> pole at 15 rad/s
-% — Zero steady state tracking error for a step reference.-> Two zeros at 0
-% — A modulus margin of at least 0.5.-> max magnitude 1/r = 2
-
+%% 1. Definition of W1 and importing W2 from first exercice
 
 W1 = (s+15)*0.5/ (s+0.00001)
-
-% 2. Use the best nominal model and its multiplicative uncertainty filter W2(z) to design an
-% H? controller for robust performance using the mixed sensitivity approach (use mixsyn).
-
-%I just take a random W2 till we know the best one
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-load Gyro300
-Z=iddata(y,u,Ts);
-Zd = detrend(Z);
-G1 = oe(Zd,[6 6 1]);
-G1f = spa(Zd,100);
-
-load Gyro400
-Z = iddata(y,u,Ts);
-Zd = detrend(Z);
-G2 = oe(Zd,[6 6 1]);
-G2f = spa(Zd,100);
-
-load Gyro500
-Z = iddata(y,u,Ts);
-Zd = detrend(Z);
-G3 = oe(Zd,[6 6 1]);
-G3f = spa(Zd,100);
-
-
-Gn = G1;
-G = stack(1,G1,G2,G3,G1f,G2f,G3f);
-[Gu, Info] = ucover(G,Gn,4);
-
-W2 = Info.W1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-W3 = 1/5; % ensuring that control signal doesnt saturate
-
-W1d = W1; %transform W1 to a descrete time model
-
-K = mixsyn(Gn,W1d,W3,W2);
-
-% 3. Plot the step response of the closed-loop system (output and control signal), the magnitude
-% of the input sensitivity function U(z) and the sensitivity function S(z).
-
+load('CE2_1')
 G = stack(1,G1,G2,G3);
 
-T = feedback(K*G,1);
-U = feedback(K,G);
-S = feedback(1,K*G);
+%% 2. Calculating the controller and plotting the 
+
+W1d = c2d(W1,W2.Ts); %transform W1 to a discrete time model
+K = mixsyn(G_nom,W1d,[],W2);
+
+T = feedback(K*G,1);%closed-loop transfer function
+U = feedback(K,G); %input sensitivity function
+S = feedback(1,K*G); %sensitivity function
 
 figure(1)
 subplot(2,2,1)
 step(T)
+axis([0 1.5 0 1.2])
 title('Step response output')
 
 subplot(2,2,2)
@@ -71,41 +33,56 @@ title('Input sensitivity U')
 subplot(2,2,4)
 bodemag(S,1/W1d)
 title('Sensitivity function S')
+set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
+print(gcf,'Stepresponse.png','-dpng','-r300');
 
+W3 = 1/5; % ensuring that control signal doesn't saturate
+K = mixsyn(G_nom,W1d,W3,W2); %recalculate K with W3 filter
+T = feedback(K*G,1);
+U = feedback(K,G);
+S = feedback(1,K*G);
 
-% 5. The order of the final controller may be too large (especially if the order of W2(z) is large).
-% Check if there is zero/pole cancellation in the controller using pzmap. The order of the
-% controller can be reduced using the reduce command. Check the stability and performance
-% of the closed-loop system with the reduced order controller.
+%% 3. Reduction of the controller order
 
 figure(2)
 subplot(1,2,1)
 pzmap(K)
 subplot(1,2,2)
 hsvd(K) %calculating the Hankel singular values 
+set(gcf,'Renderer', 'painters', 'Position', [10 10 800 400]);
+print(gcf,'PoleAnalysis.png','-dpng','-r300');
 
-Kred = reduce(K,1); %reducing the controller to first order
+Kred = reduce(K,1); %reducing the controller to 6th order
 
 Tred = feedback(Kred*G,1);
 Ured = feedback(Kred,G);
 Sred = feedback(1,Kred*G);
 
+
+%% 4. Final comparison of the 14th order and 6th order controller
+
 figure(3)
 subplot(2,2,1)
-step(Tred)
+step(Tred,T)
 title('Step response output')
+axis([0 1.5 0 1.2])
 
 subplot(2,2,2)
-step(Ured)
+step(Ured,U)
 title('Step response control signal')
+legend('6th order controller','14th order controller')
 
 subplot(2,2,3)
-bodemag(Ured,5*tf([1],[1]))
+bodemag(Ured,U,5*tf([1],[1]))
 title('Input sensitivity U')
 
 subplot(2,2,4)
-bodemag(Sred,1/W1d)
+bodemag(Sred,S,1/W1d)
 title('Sensitivity function S')
+set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
+print(gcf,'StepresponseSimplified.png','-dpng','-r300');
+
+
 
 
 
