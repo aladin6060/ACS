@@ -1,6 +1,6 @@
 %% 2.4 Multiplicative uncertainity
 
-clear all;
+clear variables;
 close all;
 
 load Gyro300
