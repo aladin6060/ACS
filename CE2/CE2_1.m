@@ -95,25 +95,27 @@ for o=1:MaxModelOrder
 end
 
 modellabels= {'G1_OE','G2_OE','G3_OE','G1_SPA','G2_SPA','G3_SPA'};
-modelorders=1:20;
-heatmap(W2_2norms)
-g=heatmap(modelorders,modellabels,W2_2norms)
+modelorders=1:MaxModelOrder;
+%heatmap(W2_2norms)
+heatmap(modelorders,modellabels,W2_2norms)
 %hold on
-
-g.Xlabel='Order';
-g.Ylabel='Model';
+title('2-Norm of W2-Filters')
+xlabel='Order';
+ylabel='Model';
 %%
-W2_infnormsplot=W2_infnorms
-W2_infnormsplot(W2_infnormsplot>1)=[1]
-modellabels= {'G1_OE','G2_OE','G3_OE','G1_SPA','G2_SPA','G3_SPA'};
-modelorders=1:20;
+W2_infnormsplot=W2_infnorms;
+W2_infnormsplot(W2_infnormsplot>1)=[1];
+
+%%
 figure;
-h=heatmap(modelorders,modellabels,W2_infnorms)
-set(gca,'ColorScale','log')
+heatinf=heatmap(modelorders,modellabels,W2_infnormsplot)
+
 %hold on
-h.Title('Infinity-Norm of W2-Filters')
-h.Xlabel='Order';
-h.Ylabel='Model';
+heatinf.Colormap= hot;
+heatinf.ColorScaling= 'log';
+title('Inf-Norm of W2-Filters')
+heatinf.Xlabel='Order';
+heatinf.Ylabel='Model';
 
 
 %% Choice of best model
@@ -143,18 +145,20 @@ minNcombOrder
 figure;
 W2_combplot=W2_combined;
 W2_combplot(W2_combplot>2)=[2];
-surf(W2_combplot);
-%hold on
-title('Combined Score')
-xlabel('Order')
-ylabel('Model')
-zlabel('Comb-Norm')
+
+heatcomb=heatmap(modelorders,modellabels,W2_combplot)
+
+heatcomb.Colormap= hot;
+heatcomb.ColorScaling= 'log';
+heatcomb.heatmap(W2_combplot);
+heatcomb.Title('Combined Score')
+heatcomb.Xlabel('Order')
+heatcomb.Ylabel('Model')
+
 
 %% Plot W2 with 1-Gtilda/Gnom to verify correctness
 W2=["G1","G2","G3","G1f","G2f","G3f"];
 Gs = ["G1","G2","G3","G1f","G2f","G3f"];
-
-
 
 G_nom=eval(Gs(minNcombModel)); %ugly but works, because if stored in matrices the idpoly data gets converted to a channel of idfrd data
 [sys,Info] = ucover(G_tilde,eval(W2(minNcombModel)),minNcombOrder);
@@ -162,7 +166,7 @@ W2 = Info.W1;
 
 
 figure;
-bodemag(bestW2,'r')
+bodemag(W2,'r')
 hold on
 bodemag(1-G_tilde/G_nom,'--b')
 set(gca,'YLim',[-35 0])

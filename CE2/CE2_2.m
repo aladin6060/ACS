@@ -40,7 +40,7 @@ set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
 print(gcf,'Stepresponse.png','-dpng','-r300');
 
 W3 = 1/5; % ensuring that control signal doesn't saturate
-K = mixsyn(G_nom,W1d,W3,W2); %recalculate K with W3 filter
+[K,CL,Gamma] = mixsyn(G_nom,W1d,W3,W2); %recalculate K with W3 filter
 T = feedback(K*G,1);
 U = feedback(K,G);
 S = feedback(1,K*G);
@@ -84,8 +84,6 @@ bodemag(Sred,S,1/W1d)
 title('Sensitivity function S')
 set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
 print(gcf,'StepresponseSimplified.png','-dpng','-r300');
-
-
 
 if Gamma<1/sqrt(2)
     fprintf('The controller is working at robust performance')
