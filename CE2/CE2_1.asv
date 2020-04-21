@@ -107,11 +107,12 @@ end
 modellabels= {'G1_OE','G2_OE','G3_OE','G1_SPA','G2_SPA','G3_SPA'};
 modelorders=1:20;
 heatmap(W2_2norms)
-g=heatmap(modelorders,modellabels,W2_2norms)
+h=heatmap(modelorders,modellabels,W2_infnorms)
 %hold on
-
-g.Xlabel='Order';
-g.Ylabel='Model';
+title('2-Norm of W2-Filters')
+xlabel('Order')
+ylabel('Model')
+zlabel('2-Norm')
 %%
 W2_infnormsplot=W2_infnorms
 W2_infnormsplot(W2_infnormsplot>1)=[1]

@@ -8,11 +8,12 @@ G1 = oe(Zd,[6 6 1]);
 G1f=spa(Zd,100);
 
 G1c = d2c(G1)
+G1ss=ss(G1c) % weiss nid was dr ungerschid zwüsche G1c.A und däm isch, aber es git wenigstens ä 6x6 Matrix use
 
-A = G1c.A
-B = G1c.B
-C = G1c.C
-D = G1c.D
+A = G1ss.A
+B = G1ss.B
+C = G1ss.C
+D = G1ss.D
 
 
 
