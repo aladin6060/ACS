@@ -4,10 +4,13 @@ s = tf('s')
 %% 1. Definition of W1 and importing W2 from first exercice
 
 W1 = (s+15)*0.5/ (s+0.00001)
+
+
 load('CE2_1')
 G = stack(1,G1,G2,G3);
 
 %% 2. Calculating the controller and plotting the sensitivity function and step response
+
 
 W1d = c2d(W1,W2.Ts); %transform W1 to a discrete time model
 K = mixsyn(G_nom,W1d,[],W2);
@@ -83,6 +86,12 @@ set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
 print(gcf,'StepresponseSimplified.png','-dpng','-r300');
 
 
+
+if Gamma<1/sqrt(2)
+    fprintf('The controller is working at robust performance')
+else 
+    fprintf('The controller is not working at robust performance')
+end
 
 
 

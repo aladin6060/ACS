@@ -6,12 +6,15 @@ Z=iddata(y,u,Ts);
 Zd=detrend(Z);
 G1 = oe(Zd,[6 6 1]);
 G1f=spa(Zd,100);
+
+
 G1c = ss(d2c(G1)) %transforming the id model to a continous state space model
  
 A = G1c.A
 B = G1c.B
 C = G1c.C
 D = G1c.D
+
 
 
 %% 2. Setting up the LMI
