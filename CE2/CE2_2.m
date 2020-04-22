@@ -3,7 +3,7 @@ s = tf('s')
 
 %% 1. Definition of W1 and importing W2 from first exercice
 
-W1 = (s+15)*0.5/ (s+0.00001)
+W1 = (s+20)*0.5/ (s+0.00001)
 
 
 load('CE2_1')
@@ -55,7 +55,7 @@ hsvd(K) %calculating the Hankel singular values
 set(gcf,'Renderer', 'painters', 'Position', [10 10 800 400]);
 print(gcf,'PoleAnalysis.png','-dpng','-r300');
 
-Kred = reduce(K,1); %reducing the controller to 6th order
+Kred = reduce(K,6); %reducing the controller to 6th order
 
 Tred = feedback(Kred*G,1);
 Ured = feedback(Kred,G);
@@ -91,7 +91,12 @@ else
     fprintf('The controller is not working at robust performance')
 end
 
+%% Calculation of crossover frequency and modulus margin
 
+infS = norm(Sred,inf);
+modulusmargin = 1./infS %modulus margin
 
+ T1 = feedback(Kred*G1,1);
 
+ fb = bandwidth(Tred)
 
