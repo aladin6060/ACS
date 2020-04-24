@@ -29,12 +29,16 @@ nyquist(G3,'sd',2)
 title('Nyquist diagram of the parametric ID (OE)')
 axis([-1 1.5 -0.5 0.5])
 axis equal
+
+evalfr(G3,4*i)
 % Elyptic uncertainity because of parametric uncertainity
+
 
 figure(2)
 nyquist(G3f,'sd',2)
 title('Nyquist diagram of the non-parametric ID (SPA)')
 axis([-1 1.5 -0.5 0.5])
+axis equal
 
 
 figure(3) % Plot the frequency response of the non-parametric ( spa ) ID
@@ -48,6 +52,8 @@ bodemag(G1,G2,G3)
 legend('G1','G2','G3')
 axis([10^-2 10^3 -60 10])
 title('Bode diagram of the parametric ID (OE)')
+
+
 
 %%
 %Create a model array based on all identified models
@@ -94,14 +100,23 @@ for o=1:MaxModelOrder
     calctime=[calctime,toc];
 end
 
+figure;
+plot(calctime)
+xlabel('Model Order')
+ylabel('Calculation Time [s]')
+
+
+%%
+figure;
 modellabels= {'G1_OE','G2_OE','G3_OE','G1_SPA','G2_SPA','G3_SPA'};
 modelorders=1:MaxModelOrder;
-%heatmap(W2_2norms)
-heatmap(modelorders,modellabels,W2_2norms)
+heat2=heatmap(modelorders,modellabels,W2_2norms)
 %hold on
+heat2.Colormap= hot;
+heat2.ColorScaling= 'log';
 title('2-Norm of W2-Filters')
-xlabel='Order';
-ylabel='Model';
+xlabel('Order');
+ylabel('Model');
 %%
 W2_infnormsplot=W2_infnorms;
 W2_infnormsplot(W2_infnormsplot>1)=[1];
@@ -114,8 +129,8 @@ heatinf=heatmap(modelorders,modellabels,W2_infnormsplot)
 heatinf.Colormap= hot;
 heatinf.ColorScaling= 'log';
 title('Inf-Norm of W2-Filters')
-heatinf.Xlabel='Order';
-heatinf.Ylabel='Model';
+xlabel('Order');
+ylabel('Model');
 
 
 %% Choice of best model
@@ -150,10 +165,9 @@ heatcomb=heatmap(modelorders,modellabels,W2_combplot)
 
 heatcomb.Colormap= hot;
 heatcomb.ColorScaling= 'log';
-heatcomb.heatmap(W2_combplot);
-heatcomb.Title('Combined Score')
-heatcomb.Xlabel('Order')
-heatcomb.Ylabel('Model')
+title('W2 evaluation with combined 2norm/infnorm Score')
+xlabel('Order')
+ylabel('Model')
 
 
 %% Plot W2 with 1-Gtilda/Gnom to verify correctness
