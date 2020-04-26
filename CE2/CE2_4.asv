@@ -1,9 +1,9 @@
 clc; clear variables; close all;
 
 
-%javaaddpath('C:\Program Files\Mosek/9.2/tools/platform/win64x86/bin/mosek.jar')
+javaaddpath('C:\Program Files\Mosek/9.2/tools/platform/win64x86/bin/mosek.jar')
 %Mirkos Path, @Silvio: comment mine wes muesch ändere vorem pushe
-%addpath('C:\Program Files\MATLAB\R2018a\Mosek\9.2\toolbox\R2015a')
+addpath('C:\Program Files\MATLAB\R2018a\Mosek\9.2\toolbox\R2015a')
 %@Silvio: Muesch dr ganz Mosek-Folder wo i Program Files hesch ou i di MATLAB
 %folder inekopiere
 %% Test if mosek is properly implemented
@@ -52,8 +52,6 @@ o2W1 = 1/s;
 
 z=tf('z',Ts);
 Kinit= 0.01/(z-1);
-K0=0.01;
-Fy=z-1;
 Gx=stack(1,G1,G2,G3);
 T_init=feedback(Kinit*Gx,1);
 
@@ -65,9 +63,9 @@ pzmap(T_init)
 P = datadrivenACS;
 P.Model.Plant = G_tilde;
 P.Model.Frequency = logspace(-2,log10(pi/Ts),400);
-P.Feedback.controller.K0=K0;
-P.Feedback.controller.Ts=G1.Ts;
-P.Feedback.controller.Fy=Fy;
+P.Feedback.controller.K0=0.01;
+P.Feedback.controller.K0=0.01;
+P.Feedback.controller.K0=0.01;
 %P.setKinit(Kinit);
 P.Feedback.controller.order = 6;
 
