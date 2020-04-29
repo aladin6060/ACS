@@ -55,7 +55,7 @@ hsvd(K) %calculating the Hankel singular values
 set(gcf,'Renderer', 'painters', 'Position', [10 10 800 400]);
 print(gcf,'PoleAnalysis.png','-dpng','-r300');
 
-Kred = reduce(K,6); %reducing the controller to 6th order
+Kred = reduce(K,4); %reducing the controller to 6th order
 
 Tred = feedback(Kred*G,1);
 Ured = feedback(Kred,G);
@@ -99,4 +99,6 @@ modulusmargin = 1./infS %modulus margin
  T1 = feedback(Kred*G1,1);
 
  fb = bandwidth(Tred)
-
+ 
+ %%
+ save('CE2_2','Sred','Ured','Tred')
