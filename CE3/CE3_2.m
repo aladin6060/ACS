@@ -14,7 +14,7 @@ Q_order=1;
 
 %Robust performance ||W_1S|+|W_2T||_inf<1
 %S=(AS_0-ABQ)/P and Q=H_RH_SQ'
-%T=
+%T=1-S
 
 
 

@@ -31,8 +31,8 @@ overshoot=0.05;
 Tset=0.6;
 dampfact=sqrt(log(overshoot)^2/(log(overshoot)^2+pi^2));
 natfreq=-log(0.02)/(dampfact*Tset);
-p1=-2*exp(-dampfact*natfreq*Tset)*cos(natfreq*Ts*sqrt(1-dampfact^2));
-p2=exp(-2*dampfact*natfreq*Tset);
+p1=-2*exp(-dampfact*natfreq*Ts)*cos(natfreq*Ts*sqrt(1-dampfact^2));
+p2=exp(-2*dampfact*natfreq*Ts);
 P=[1;p1;p2];
 
 %% Find R & S
@@ -43,3 +43,46 @@ H_R=[1,1]; %open loop at Nyqu frequ
 
 %% Verify closed loop poles
 P_achieved=conv(A,S)+conv(B,R)
+P_tf = tf(1,P_achieved',1)
+pzmap(P_tf) %poles around zero should be zero, nummerical error
+
+%% Calculate T
+%same tracking and regulation dynamics -> sum up R
+T=sum(R)
+
+%% Calculate tracking step response of cl-system
+
+%result: we exceed the given maximal control signal (30dB), so the solution would
+%be to slow down the poles. But there we have not a lot of margin as the
+%settling time is 0.58<0.6s just slightly below the constraint -> hence we
+%need Q parametrisation
+CL=tf(conv(T,B),P',Ts,'variable','z^-1');
+
+stepinfo(CL)
+
+Sensitivity=1-CL;
+U=tf(conv(A,R)',P',Ts,'variable','z^-1')
+
+figure(1)
+subplot(2,2,1)
+step(CL)
+axis([0 1.5 0 1.2])
+title('Step response output')
+
+subplot(2,2,2)
+step(U)
+title('Step response control signal')
+
+subplot(2,2,3)
+bodemag(U,db2mag(30)*tf([1],[1]))
+title('Input sensitivity U')
+
+s = tf('s')
+W1 = c2d((s+20)*0.5/ (s+0.00001),Ts);
+subplot(2,2,4)
+bodemag(Sensitivity,1/W1)
+title('Sensitivity function S')
+set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
+%print(gcf,'Stepresponse.png','-dpng','-r300');
+
+

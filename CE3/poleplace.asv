@@ -18,12 +18,19 @@ function [R,S] = poleplace(B,A,H_R,H_S,P)
     n_Sprime=n_Bprime-1;
 
 
-    Msize=n_Aprime+n_Bprime;
+    Msize=n_Aprime+n_Bprime-1;
     M=zeros(Msize);
-    Aprime(Msize)=0;
-    Bprime(Msize)=0;
-    M = [toeplitz(Aprime,0*Aprime(1:n_Bprime)), toeplitz(Bprime,0*Bprime(1:n_Aprime))];
 
+    M = [toeplitz(Aprime,0*Aprime(1:n_Bprime)), toeplitz(Bprime,0*Bprime(1:n_Aprime)]]);
+%%
+    %{
+    for i = 1:n_Bprime
+        M(i:i+n_Aprime-1,i)=Aprime;
+    end
+    for i = (n_Bprime+1):Msize
+        M(i-n_Bprime+1:i,i)=Bprime;
+    end
+    %}
     p=zeros(Msize,1);
     p(1:length(P))=P;
     x = inv(M)*p;
