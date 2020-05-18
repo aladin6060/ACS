@@ -85,4 +85,6 @@ title('Sensitivity function S')
 set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
 %print(gcf,'Stepresponse.png','-dpng','-r300');
 
+save('CE3_1','R','S','T','P')
+
 
