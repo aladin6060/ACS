@@ -61,7 +61,9 @@ CL=tf(conv(T,B),P',Ts,'variable','z^-1');
 stepinfo(CL)
 
 Sensitivity=1-CL;
-U=tf(conv(A,R)',P',Ts,'variable','z^-1')
+
+U_sens=tf(conv(A,R)',P',Ts,'variable','z^-1');
+U=tf(conv(A,T),P',Ts,'variable','z^-1');
 
 figure(1)
 subplot(2,2,1)
@@ -74,7 +76,7 @@ step(U)
 title('Step response control signal')
 
 subplot(2,2,3)
-bodemag(U,db2mag(30)*tf([1],[1]))
+bodemag(U_sens,db2mag(30)*tf([1],[1]))
 title('Input sensitivity U')
 
 s = tf('s')
@@ -83,7 +85,7 @@ subplot(2,2,4)
 bodemag(Sensitivity,1/W1)
 title('Sensitivity function S')
 set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
-%print(gcf,'Stepresponse.png','-dpng','-r300');
+print(gcf,'RSTPolePlacement.png','-dpng','-r300');
 
 save('CE3_1','R','S','T','P')
 
