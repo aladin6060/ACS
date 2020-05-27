@@ -11,8 +11,8 @@ W1 = c2d((s+20)*0.5/ (s+0.00001),Ts);
 %W1 = 0.5;
 W3 = 1/5*tf([1] ,[1]);
 
-Hr= [1 1]
-Hs= [1 -1]
+Hr= [1 1];
+Hs= [1 -1];
 
 %% Extracting the coefficients of the polynomials A & B
 
@@ -45,9 +45,12 @@ CL=tf(conv(R,B),P,Ts,'variable','z^-1');
 CL1=tf(conv(R,B1),P1,Ts,'variable','z^-1');
 CL3=tf(conv(R,B3),P3,Ts,'variable','z^-1');
 
-stepinfo(CL)
-stepinfo(CL1)
-stepinfo(CL3)
+CL_bigLoop=tf(conv(T,B),P,Ts,'variable','z^-1');
+CL1_bigLoop=tf(conv(T,B1),P1,Ts,'variable','z^-1');
+CL3_bigLoop=tf(conv(T,B3),P3,Ts,'variable','z^-1');
+stepinfo(CL_bigLoop)
+stepinfo(CL1_bigLoop)
+stepinfo(CL3_bigLoop)
 
 Sensitivity1=1-CL1;
 Sensitivity=1-CL;
@@ -62,8 +65,8 @@ U_sens3=tf(conv(A3,R),P3,Ts,'variable','z^-1');
 %%
 figure;
 subplot(2,2,1)
-step(CL,CL1,CL3)
-axis([0 1 0 1.2])
+step(CL_bigLoop,CL1_bigLoop,CL3_bigLoop)
+axis([0 1 0 1.5])
 title('Step response output')
 
 subplot(2,2,2)

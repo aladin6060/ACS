@@ -56,9 +56,10 @@ T=sum(R)
 %be to slow down the poles. But there we have not a lot of margin as the
 %settling time is 0.58<0.6s just slightly below the constraint -> hence we
 %need Q parametrisation
-CL=tf(conv(T,B),P',Ts,'variable','z^-1');
+CL=tf(conv(R,B)',P',Ts,'variable','z^-1');
+CL_bigLoop=tf(conv(T,B),P',Ts,'variable','z^-1');
 
-stepinfo(CL)
+stepinfo(CL_bigLoop)
 
 Sensitivity=1-CL;
 
@@ -67,8 +68,8 @@ U=tf(conv(A,T),P',Ts,'variable','z^-1');
 
 figure(1)
 subplot(2,2,1)
-step(CL)
-axis([0 1.5 0 1.2])
+step(CL_bigLoop)
+axis([0 1 0 1.2])
 title('Step response output')
 
 subplot(2,2,2)

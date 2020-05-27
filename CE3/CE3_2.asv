@@ -45,6 +45,8 @@ CL=tf(conv(R,B),P,Ts,'variable','z^-1');
 CL1=tf(conv(R,B1),P1,Ts,'variable','z^-1');
 CL3=tf(conv(R,B3),P3,Ts,'variable','z^-1');
 
+CL_bigLoop=
+
 stepinfo(CL)
 stepinfo(CL1)
 stepinfo(CL3)
@@ -55,11 +57,15 @@ Sensitivity3=1-CL3;
 U1=tf(conv(A1,T),P1,Ts,'variable','z^-1');
 U=tf(conv(A,T),P,Ts,'variable','z^-1');
 U3=tf(conv(A3,T),P3,Ts,'variable','z^-1');
+
+U_sens1=tf(conv(A1,R),P1,Ts,'variable','z^-1');
+U_sens=tf(conv(A,R),P,Ts,'variable','z^-1');
+U_sens3=tf(conv(A3,R),P3,Ts,'variable','z^-1');
 %%
 figure;
 subplot(2,2,1)
 step(CL,CL1,CL3)
-axis([0 1 0 1.2])
+axis([0 1 0 1.5])
 title('Step response output')
 
 subplot(2,2,2)
@@ -67,18 +73,17 @@ step(U,U1,U3)
 title('Step response control signal')
 
 subplot(2,2,3)
-bodemag(U,U1,U3,db2mag(30)*tf([1],[1]))
+bodemag(U_sens,U_sens1,U_sens3,db2mag(30)*tf([1],[1]))
 title('Input sensitivity U')
 
 s = tf('s');
-%W1 = c2d((s+20)*0.5/ (s+0.00001),Ts);
 subplot(2,2,4)
-bodemag(Sensitivity,Sensitivity1,Sensitivity3,1/W1)%,Sensitivity1,Sensitivity3,1/W1
+bodemag(Sensitivity,Sensitivity1,Sensitivity3,1/W1)
 
 title('Sensitivity function S')
 set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 800]);
-%saveas(gcf,'QParam.png')
+saveas(gcf,'QParam.png')
 
 %%
-figure;
+figure; %should be below 0db to satisfy constriant
 bodemag((W1*Sensitivity)*conj(W1*Sensitivity) + W2*(1-Sensitivity)*conj(W2*(1-Sensitivity)))
