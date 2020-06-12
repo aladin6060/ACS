@@ -31,13 +31,13 @@ switch flag,
 %hint: Based on u(i) compute the monintoring signal Ji in a recursive
 %      way for all inputs (prediction errors)
         
-        for i=1:m
-            J(i)= alpha*u(i)^2+  
+        for i=1,m
+            Ji= alpha u(i)^2+
             
             
         end
         
-        [V,x(m+1)] = min(J) 
+        [V,] = min(A) 
         
        
 %hint: Write an algorithm for the Dwell-Time

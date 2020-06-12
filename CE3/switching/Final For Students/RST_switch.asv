@@ -4,7 +4,10 @@ function [sys,x0,str,ts]=RST_switch(t,x,u,flag,R1,S1,T1,R2,S2,T2,R3,S3,T3,Ts)
 % signal {1,2,3}.
 % The input vector u has three input signals for the switching signal, 
 % reference signal and the plant output. 
-% The output of the block is the control signal. Ts is the sampling period. 
+% The output of the block is the control signal. Ts is the sampling period.
+
+% It is assumed that all controller have the same order, otherwise the code
+% should be modified.
 
 nr=length(R1)-1;
 ns=length(S1)-1;
@@ -16,7 +19,7 @@ n=nr+ns+nt;
 %u(2): reference signal
 %u(3): output signal
 
-Usatplus=5;Usatminus=-5;
+
 
 switch flag,
     % Initialization
@@ -42,29 +45,25 @@ switch flag,
             case 1
                 R=R1;S=S1;T=T1;
             case 2
-                R=  ;S=  ;T=  ;
+                R=R2  ;S=S2  ;T=T2  ;
             case 3
-                R=  ;S=  ;T=  ;
+                R=R3  ;S=S3  ;T=T3  ;
         end
-        u_k=
-%hint: saturation should be considered here  
-            
-        if nt>0
-            sys=[u_k;x(1:ns-1);u(3);x(ns+1:nr+ns-1);u(2);x(nr+ns+1:n-1)];
+
+      
+        u_k= 
+%hint: Update the state vector (including past inputs, past outputs and past reference signals)
+%why do we have to save that?             
+
+        if nt>0  % For the case that T is a vector 
+            sys= [u;u_k(1:nt)]
         else
-            sys=[u_k;x(1:ns-1);u(3);x(ns+1:nr+ns-1)];
+            sys= [u;u_k;]
         end
      % output update
     case 3
-        switch u(1)
-            case 1
-                R=  ;S=  ;T=  ;
-            case 2
-                R=  ;S=  ;T=  ;
-            case 3
-                R=  ;S=  ;T=  ;                   
-        end
-        sys=
+     % Compute again u_k and send it out  
+        sys=u_k;
   
     case 9
         sys=[];

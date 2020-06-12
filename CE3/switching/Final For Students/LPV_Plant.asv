@@ -39,29 +39,28 @@ switch flag,
         
         if theta <= 0,
             B=B2+theta*(B2-B1);
-            A=A2+teata*(A2-B1);
+            A=A2+teata*(A2-B1)
         else
-            B=B2-theta*(B2-B1);
-            A=A2-teata*(A2-B1);
+            B=B2+
+            A=
         end
         
-        y_k=            %how do i implement this in matlab
+        y_k=
 
-        sys=[-y_k;x(1:nA-1);u(1);x(nA+1:n-1);theta]; 
+        sys=[-y_k;x(1:nA-1);u(1);x(nA+1:n-1);theta];
                
      % output update
     case 3  
-        theta=x(end);           
+        theta=x(end);      
         if theta <= 0
-           B=B2+theta*(B2-B1);     
-           A=A2+teata*(A2-B1);
+            B=B2+theta*(B2-B1);
+            A=
         else
-            B=B2-theta*(B2-B1);
-            A=A2-teata*(A2-B1);
+            B=
+            A=
         end
-       
         
-        sys=y_k               
+        sys=
          
     case 9
         sys=[];

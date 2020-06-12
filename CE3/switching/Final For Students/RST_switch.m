@@ -19,7 +19,7 @@ n=nr+ns+nt;
 %u(2): reference signal
 %u(3): output signal
 
-Usatplus=5;Usatminus=-5;
+
 
 switch flag,
     % Initialization
@@ -45,19 +45,20 @@ switch flag,
             case 1
                 R=R1;S=S1;T=T1;
             case 2
-                R=  ;S=  ;T=  ;
+                R=R2  ;S=S2  ;T=T2  ;
             case 3
-                R=  ;S=  ;T=  ;
+                R=R3  ;S=S3  ;T=T3  ;
         end
-%hint: Saturation should also be considered here
+
       
-        u_k=
+        u_k= 
 %hint: Update the state vector (including past inputs, past outputs and past reference signals)
-             
+%why do we have to save that?             
+
         if nt>0  % For the case that T is a vector 
-            sys=
+            sys= [u;u_k(1:nt)]
         else
-            sys=
+            sys= [u;u_k;]
         end
      % output update
     case 3
