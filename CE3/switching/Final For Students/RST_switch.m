@@ -1,4 +1,4 @@
-function [sys,x0,str,ts]=RST_switch(t,x,u,flag,R1,S1,T1,R2,S2,T2,R3,S3,T3,Ts)
+function [sys,x0,str,ts]=RST_switch(t,x,u,flag,N1,D1,N2,D2,N3,D3,Ts)
 % This S-Function computes the control signal of multi RST controllers.
 % There are three fixed RST controllers corresponding to the switching
 % signal {1,2,3}.
@@ -9,11 +9,9 @@ function [sys,x0,str,ts]=RST_switch(t,x,u,flag,R1,S1,T1,R2,S2,T2,R3,S3,T3,Ts)
 % It is assumed that all controller have the same order, otherwise the code
 % should be modified.
 
-nr=length(R1)-1;
-ns=length(S1)-1;
-nt=length(T1)-1;
-
-n=nr+ns+nt;
+ n = length(N1);
+ persistent u_2 
+ persistent e
 
 %u(1): Switching signal
 %u(2): reference signal
@@ -21,12 +19,12 @@ n=nr+ns+nt;
 
 
 
-switch flag,
+switch flag
     % Initialization
-    case 0,
+    case 0
         sizes = simsizes;
         sizes.NumContStates  = 0;
-        sizes.NumDiscStates  = n;
+        sizes.NumDiscStates  = 2*n;
         sizes.NumOutputs     = 1;
         sizes.NumInputs      = 3;
 
@@ -41,29 +39,25 @@ switch flag,
         
      % state update 
     case 2     
-        switch u(1)
-            case 1
-                R=R1;S=S1;T=T1;
-            case 2
-                R=R2  ;S=S2  ;T=T2  ;
-            case 3
-                R=R3  ;S=S3  ;T=T3  ;
-        end
-
+       
       
-        u_k= 
-%hint: Update the state vector (including past inputs, past outputs and past reference signals)
-%why do we have to save that?             
+      x = circshift(x,1); % push all states 1 sample back
+      x([1,n+1]) = [e,u_2]; % replace with correct U[k], E[k]
+      sys = x; % new internal states for NEXT iteration
 
-        if nt>0  % For the case that T is a vector 
-            sys= [u;u_k(1:nt)]
-        else
-            sys= [u;u_k;]
-        end
-     % output update
     case 3
-     % Compute again u_k and send it out  
-        sys=u_k;
+      switch u(1)
+            case 1
+                NUM=N1 ; DEN=D1;
+            case 2
+                NUM=N2 ; DEN=D2;
+            case 3
+                NUM=N3 ; DEN=D3;
+      end
+      
+        e = u(2)-u(3)
+       u_2 =  NUM*[e;x(1:n-1)] - DEN(2:end)*x(n+1:end-1)
+       sys = u_2
   
     case 9
         sys=[];
