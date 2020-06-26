@@ -38,26 +38,21 @@ switch flag
 %      way for all inputs (prediction errors)
         
         for i=1:m
-            J(i)= exp(lambda)*(x(i) - alpha*x(5+i)^2)+ exp(-lambda)*x(5+i) +alpha*u(i);   
+            J(i)=exp(lambda)*(x(i) - alpha*x(5+i)^2)+ exp(-lambda)*x(5+i) +alpha*u(i);   
                     %removing old instantaneous mesure, shifting forgetting
                     %factor, adding new therm forgetting factor and new
                     %inestantaneous measure
                    
         end
       
-        if x(m+2)-1==0
-           [V,x(m+1)] = min(J); %getting the index of the lowerst J
+        if x(m+2)==0
+           [V,x(m+1)] = min(J); %getting the index of the lowest J
            x(m+2) = DT    ;     % Resetting counter 
         else
             x(m+2)=x(m+2)-1  ;  %Reducing counter by one
         end
         
   
-%hint: Write an algorithm for the Dwell-Time
-%      DT shows the number of sampling period of waiting between two
-%      switchings and is saved in x(m+2).
-%      x(m+1) is the choice of the best predictor.
-        
         sys=[J';x([4,5]);u];
         
      % output update

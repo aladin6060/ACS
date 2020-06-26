@@ -55,9 +55,9 @@ switch flag
                 NUM=N3 ; DEN=D3;
       end
       
-        e = u(2)-u(3)
-       u_2 =  NUM*[e;x(1:n-1)] - DEN(2:end)*x(n+1:end-1)
-       sys = u_2
+        e = u(2)-u(3) %error
+       u_2 =  NUM*[e;x(1:n-1)] - DEN(2:end)*x(n+1:end-1) %claculate controller output
+       sys = u_2 %write controller output
   
     case 9
         sys=[];

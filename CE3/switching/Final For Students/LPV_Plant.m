@@ -9,9 +9,7 @@ function [sys,x0,str,ts]=LPV_Plant(t,x,u,flag,A1,B1,A2,B2,A3,B3,Ts)
 % state of the system (passed inputs and outputs).
 
 
-n = length(A1); 
- persistent y_k
-
+n = length(B1); 
  
 switch flag
     % Initialization
@@ -33,19 +31,8 @@ switch flag
         
      % state update 
     case 2
-        
-        
-        x = circshift(x,1); % push all states 1 sample back
-        x([1,n+1,end]) = [y_k,u(1),u(2)]; %updtate the state of output, input and theta
-        sys = x;        % wirte update
-
-        
-               
-     % output update
-    case 3  
-        u_k=u(1)        %somehow this is NaN no idea why
+        u_k=u(1)       
         theta=u(2) 
-        
         if u(2) < -1, theta=-1;end
         if u(2) > 1, theta=1;end
         
@@ -56,10 +43,18 @@ switch flag
             B=B2-theta*(B2-B3);
             A=A2-theta*(A2-A3);
         end
+
+        y_k = B*[u_k;x(1:n-1)] - A(2:end)*x(n+1:end-1); %claculating output of plant 
         
-        y_k = B*[u_k;x(1:n-1)] - A(2:end)*x(n+1:end-1); 
-                    
-        sys=y_k
+        x = circshift(x,1); % push all states 1 sample back
+        x([1,n+1]) = [y_k,u(1)];                        %updtate the state of output, input
+        sys = x;                                        %write update
+
+        
+               
+    
+    case 3          
+        sys=x(1)            %write output
         
     case 9
         sys=[];
