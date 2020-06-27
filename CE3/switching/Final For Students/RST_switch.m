@@ -17,6 +17,9 @@ function [sys,x0,str,ts]=RST_switch(t,x,u,flag,N1,D1,N2,D2,N3,D3,Ts)
 %u(2): reference signal
 %u(3): output signal
 
+%x =    [1,n]past n error signals
+%       [n+1,end]past n control signals
+
 
 
 switch flag

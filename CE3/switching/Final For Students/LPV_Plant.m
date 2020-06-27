@@ -27,6 +27,9 @@ switch flag
         x0  = zeros(sizes.NumDiscStates,1);
         str = [];
         ts  = [Ts 0];
+        
+%x =    [1,n]past n system outputs
+%       [n+1,end]past n control signals
        
         
      % state update 

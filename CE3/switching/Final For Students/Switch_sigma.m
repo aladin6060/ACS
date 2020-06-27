@@ -3,7 +3,7 @@ function [sys,x0,str,ts]=Switch_sigma(t,x,u,flag,alpha,lambda,DT,Ts)
 % The input vector u has m inputs that are the estimation errors from a 
 % multi-estimator. The parameters are the weighting factor, forgetting factor
 % and Dwell-Time. (beta is assumed to be equal to one)
-% u = [1-3] estimation errors 
+
  
 m = 3;
 
@@ -23,6 +23,7 @@ switch flag
         x0  = [zeros(m,1);1;DT;zeros(m,1)];
         str = [];
         ts  = [Ts 0]; 
+% u = [1-3] estimation errors 
         
 %x =    [1-3]Past monitoring signals
 %       [4] best modle (sigma)
@@ -38,7 +39,7 @@ switch flag
 %      way for all inputs (prediction errors)
         
         for i=1:m
-            J(i)=exp(lambda)*(x(i) - alpha*x(5+i)^2)+ exp(-lambda)*x(5+i) +alpha*u(i);   
+            J(i)=exp(lambda)*(x(i) - alpha*x(5+i)^2)+ exp(-lambda)*x(5+i)^2 +alpha*u(i)^2;   
                     %removing old instantaneous mesure, shifting forgetting
                     %factor, adding new therm forgetting factor and new
                     %inestantaneous measure
