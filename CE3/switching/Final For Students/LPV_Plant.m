@@ -8,7 +8,7 @@ function [sys,x0,str,ts]=LPV_Plant(t,x,u,flag,A1,B1,A2,B2,A3,B3,Ts)
 % The output of the block is the output signal. The vector x includes the 
 % state of the system (passed inputs and outputs).
 
-
+persistent y_k
 n = length(B1); 
  
 switch flag
@@ -24,7 +24,7 @@ switch flag
 
         sys = simsizes(sizes);
 
-        x0  = zeros(sizes.NumDiscStates,1);
+        x0  = zeros(2*n,1);
         str = [];
         ts  = [Ts 0];
         
@@ -34,8 +34,8 @@ switch flag
         
      % state update 
     case 2
-        u_k=u(1)       
-        theta=u(2) 
+           
+        theta=u(2); 
         if u(2) < -1, theta=-1;end
         if u(2) > 1, theta=1;end
         
@@ -47,17 +47,19 @@ switch flag
             A=A2-theta*(A2-A3);
         end
 
-        y_k = B*[u_k;x(1:n-1)] - A(2:end)*x(n+1:end-1); %claculating output of plant 
+        y_k = B*[u(1);x(1:n-1)] - A(2:end)*x(n+1:end-1); %claculating output of plant 
+        
         
         x = circshift(x,1); % push all states 1 sample back
-        x([1,n+1]) = [y_k,u(1)];                        %updtate the state of output, input
+        x([1,n+1]) = [u(1),y_k];                        %updtate the state of output, input
         sys = x;                                        %write update
 
         
                
     
-    case 3          
-        sys=x(1)            %write output
+    case 3       
+        
+        sys=x(n+1);           %write output
         
     case 9
         sys=[];

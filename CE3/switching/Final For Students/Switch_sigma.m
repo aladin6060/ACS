@@ -39,18 +39,18 @@ switch flag
 %      way for all inputs (prediction errors)
         
         for i=1:m
-            J(i)=exp(lambda)*(x(i) - alpha*x(5+i)^2)+ exp(-lambda)*x(5+i)^2 +alpha*u(i)^2;   
+            J(i)=exp(-lambda)*(x(i) +(1-alpha)*x(5+i)^2) + (1+alpha)*u(i)^2;   
                     %removing old instantaneous mesure, shifting forgetting
                     %factor, adding new therm forgetting factor and new
                     %inestantaneous measure
                    
         end
       
-        if x(m+2)==0
-           [V,x(m+1)] = min(J); %getting the index of the lowest J
-           x(m+2) = DT    ;     % Resetting counter 
+        if x(5)==0
+           [V,x(4)] = min(J); %getting the index of the lowest J
+           x(5) = DT    ;     % Resetting counter 
         else
-            x(m+2)=x(m+2)-1  ;  %Reducing counter by one
+            x(5)=x(5)-1  ;  %Reducing counter by one
         end
         
   

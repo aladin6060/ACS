@@ -3,23 +3,24 @@ clc; close all; clear all;
 %% Initialisation
 
 load('id_data')
-B1=G1.b(2:end);
-A1=G2.f(2:end);
-B2=G2.b(2:end);
-A2=G2.f(2:end);
-B3=G3.b(2:end);
-A3=G3.f(2:end);
+[B1,A1,Ts]= tfdata(G1,'v');
+[B2,A2]= tfdata(G2,'v');
+[B3,A3]= tfdata(G3,'v');
+clear u;
+clear y;
+
 
 alpha = 2; %factor instantaneous weight
 lambda = 0.05; % forgetting factor
-DT = 5; %dwell time
+DT = 4; %dwell time
 
 %% Controller Calculation
 
 
-[N1,D1] = controller(G1,G1f,Ts)
-[N2,D2] = controller(G2,G2f,Ts)
-[N3,D3] = controller(G3,G3f,Ts)
+[N1,D1] = controller(G1,G1f,Ts);
+[N2,D2] = controller(G2,G2f,Ts);
+[N3,D3] = controller(G3,G3f,Ts);
+
 
 
 function [Knum,Kdenum]=controller(G,Gf,Ts)
