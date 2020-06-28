@@ -48,19 +48,13 @@ switch flag
         end
 
         y_k = B*[u(1);x(1:n-1)] - A(2:end)*x(n+1:end-1); %claculating output of plant 
-        
-        
+       
         x = circshift(x,1); % push all states 1 sample back
-        x([1,n+1]) = [u(1),y_k];                        %updtate the state of output, input
-        sys = x;                                        %write update
-
-        
-               
-    
-    case 3       
-        
-        sys=x(n+1);           %write output
-        
+        x([1,n+1]) = [u(1),y_k];  %updtate the state of output, input
+        sys = x;
+        %write update
+    case 3          
+        sys=x(n+1);           
     case 9
         sys=[];
  end

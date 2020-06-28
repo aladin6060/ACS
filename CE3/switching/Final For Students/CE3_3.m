@@ -11,8 +11,8 @@ clear y;
 
 
 alpha = 2; %factor instantaneous weight
-lambda = 0.05; % forgetting factor
-DT = 4; %dwell time
+lambda = 0.005; % forgetting factor
+DT = 25; %dwell time
 
 %% Controller Calculation
 
@@ -21,7 +21,81 @@ DT = 4; %dwell time
 [N2,D2] = controller(G2,G2f,Ts);
 [N3,D3] = controller(G3,G3f,Ts);
 
+%% Simulation different thetas
 
+for i=1:5
+    theta_switch = -1.5+0.5*i
+sim('CE3_3_sim.slx',25)
+    sigma_results(i) = sigma
+end
+%% Visualisation different thetas
+%theta set to variable theta switch, simulation time 25
+close all;
+subplot(121)
+hold on
+plot(sigma_results(1))
+plot(sigma_results(3))
+plot(sigma_results(5))
+hold off
+xlabel('time[s]')
+ylabel('sigma')
+legend('theta=-1','theta=0','theta=1')
+
+subplot(122)
+hold on
+plot(sigma_results(2))
+plot(sigma_results(4))
+
+xlabel('time[s]')
+legend('theta=-0.5','theta=0.5')
+set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 500]);
+print(gcf,'diffrent_thetas.png','-dpng','-r300');
+
+%% Visualisation normal
+%theta = fixed value 0 simulation time 25
+ close all;
+subplot(121)
+hold on
+plot(y)
+plot(y_r)
+xlabel('time[s]')
+ylabel('Amplitude')
+legend('Plant output y','Reference signal y_r')
+
+subplot(122)
+hold on
+plot(u)
+xlabel('time[s]')
+title('')
+ylabel('Amplitude')
+legend('Control signal u')
+set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 500]);
+print(gcf,'normal_plot.png','-dpng','-r300');
+
+%% Visualtisation variable theta
+%Manual switch to theta, simulation time 500
+ close all;
+subplot(121)
+hold on
+plot(y)
+plot(y_r)
+ylabel('Amplitude')
+xlabel('time[s]')
+legend('Plant output y','Reference signal y_r')
+
+subplot(122)
+hold on
+plot(sigma)
+plot(theta)
+title('')
+ylabel('')
+xlabel('time[s]')
+legend('sigma','theta')
+set(gcf,'Renderer', 'painters', 'Position', [10 10 1100 500]);
+print(gcf,'Variable_theta_noise.png','-dpng','-r300');
+
+
+%% Functions
 
 function [Knum,Kdenum]=controller(G,Gf,Ts)
 
